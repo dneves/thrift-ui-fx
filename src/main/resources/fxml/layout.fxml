@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+
+<MigPane xmlns:fx="http://javafx.com/fxml"
+         id="rootPane"
+         styleClass="main-panel boxed"
+         layout="insets 10" cols="[shrink 0][grow]" rows="10[grow]10" >
+
+    <MigPane styleClass="boxed" layout="insets 10" cols="[]" rows="[][grow]" MigPane.cc="growy">
+        <Button fx:id="buttonAddContract" text="+" MigPane.cc="wrap" />
+        <TreeView fx:id="treeMethodExplorer" MigPane.cc="growy" />
+    </MigPane>
+
+    <TabPane fx:id="tabPane" MigPane.cc="growx, growy">
+
+    </TabPane>
+
+</MigPane>

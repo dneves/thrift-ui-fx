@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+
+<MigPane xmlns:fx="http://javafx.com/fxml"
+        styleClass="boxed" layout="insets 10, filly" cols="[][]" rows="[][][grow][]" MigPane.cc="growx, growy">
+
+    <MigPane styleClass="boxed" layout="insets 10, fillx" cols="[][grow][][]" rows="[]" MigPane.cc="growx, span 2, wrap">
+        <Label text="Address" MigPane.cc="" />
+        <TextField fx:id="txtServiceAddress" MigPane.cc="growx"/>
+        <Label text="Port" MigPane.cc="" />
+        <TextField fx:id="txtServicePort" />
+    </MigPane>
+
+    <Label text="Request" MigPane.cc="" />
+    <Label text="Response" MigPane.cc="wrap" />
+    <TextArea fx:id="txtRequest" wrapText="true" MigPane.cc="growy" />
+    <TextArea fx:id="txtResponse" wrapText="true" MigPane.cc="growy, wrap" />
+
+    <Button fx:id="buttonExecute" text="execute" MigPane.cc="" />
+</MigPane>
