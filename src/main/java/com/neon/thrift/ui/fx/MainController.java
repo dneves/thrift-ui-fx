@@ -1,8 +1,9 @@
 package com.neon.thrift.ui.fx;
 
-import com.neon.thrift.ui.gen.ContractCodeGenerator;
+import com.neon.thrift.ui.gen.ClassNameBuilder;
 import com.neon.thrift.ui.gen.NamespaceFinder;
 import com.neon.thrift.ui.gen.ServiceNameFinder;
+import com.neon.thrift.ui.gen.ThriftCodeGenerator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -39,7 +40,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -58,8 +58,6 @@ public class MainController implements Initializable {
     @FXML private TreeView< TreeItemHolder > treeMethodExplorer;
 
     @FXML private TabPane tabPane;
-
-    private final FullClassNameFunction fullClassNameFunction = new FullClassNameFunction();
 
     private final Pane view;
 
@@ -146,14 +144,13 @@ public class MainController implements Initializable {
 
     private void generateContractSources( String fileContractPath ) {
 //        find the service name throught thrift contract
-        Optional<String> serviceNameFinder = new ServiceNameFinder().apply(fileContractPath);
-        serviceNameFinder.ifPresent(serviceName -> {
+        new ServiceNameFinder().apply(fileContractPath).ifPresent(serviceName -> {
             try {
 //                generate thrift sources
-                Path pathContractSources = new ContractCodeGenerator().generate(serviceName, fileContractPath);
+                Path pathContractSources = new ThriftCodeGenerator().generate(serviceName, fileContractPath);
 
 //                get sources namespace
-                String namespace = getNamespace( fileContractPath );
+                String namespace = new NamespaceFinder().apply(fileContractPath).orElse(null);
 
 //                compile generated sources
                 ClassLoader classLoader = compileContractSources( pathContractSources, namespace );
@@ -165,12 +162,6 @@ public class MainController implements Initializable {
             }
         });
     }
-
-    private String getNamespace( String fileContractPath ) {
-        Optional<String> namespaceFinder = new NamespaceFinder().apply(fileContractPath);
-        return namespaceFinder.orElse( null );
-    }
-
 
     private ClassLoader compileContractSources( Path pathContractSources, String namespace ) throws IOException {
         JavaSourceCompilerImpl javaSourceCompiler = new JavaSourceCompilerImpl();
@@ -195,7 +186,10 @@ public class MainController implements Initializable {
                         }
                     } else {
                         try {
-                            String fullClassName = fullClassNameFunction.get( namespace, path1.getFileName().toString().replace( ".java", "" ) );
+                            String fullClassName = ClassNameBuilder.create()
+                                    .withNamespace( namespace )
+                                    .withServiceName( path1.getFileName().toString().replace( ".java", "" ) )
+                                    .build();
 
                             BufferedReader bufferedReader = Files.newBufferedReader(path1);
                             String source = bufferedReader.lines().collect( Collectors.joining( "\n" ) );
@@ -211,7 +205,10 @@ public class MainController implements Initializable {
 
     private void onContractSourcesGenerated( String namespace, String serviceName, ClassLoader classLoader ) {
 //        get service full classname (package.servicename)
-        String serviceClassName = fullClassNameFunction.get(namespace, serviceName);
+        String serviceClassName = ClassNameBuilder.create()
+                .withNamespace( namespace )
+                .withServiceName( serviceName )
+                .build();
 
         try {
 //            load service class

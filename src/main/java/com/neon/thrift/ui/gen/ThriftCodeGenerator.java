@@ -13,9 +13,9 @@ import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContractCodeGenerator {
+public class ThriftCodeGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( ContractCodeGenerator.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( ThriftCodeGenerator.class );
 
 
     private static class ProcessReader implements Runnable {
@@ -24,7 +24,7 @@ public class ContractCodeGenerator {
 
         private final InputStream inputStream;
 
-        public ProcessReader(InputStream inputStream) {
+        ProcessReader(InputStream inputStream) {
             this.inputStream = inputStream;
         }
 
@@ -32,7 +32,7 @@ public class ContractCodeGenerator {
         public void run() {
             try {
                 final BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream ) );
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     LOGGER.debug( line );
                 }
@@ -45,7 +45,7 @@ public class ContractCodeGenerator {
     }
 
 
-    public ContractCodeGenerator() {
+    public ThriftCodeGenerator() {
 
     }
 

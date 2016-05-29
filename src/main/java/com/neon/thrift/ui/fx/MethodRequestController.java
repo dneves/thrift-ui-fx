@@ -1,5 +1,6 @@
 package com.neon.thrift.ui.fx;
 
+import com.neon.thrift.ui.gen.ClassNameBuilder;
 import com.neon.thrift.ui.gen.JsonToObjects;
 import com.neon.thrift.ui.gen.MethodToJson;
 import javafx.fxml.FXML;
@@ -40,8 +41,6 @@ public class MethodRequestController implements Initializable {
 
     private final MethodToJson methodToJson = new MethodToJson();
     private final JsonToObjects jsonToObjects = new JsonToObjects();
-
-    private final FullClassNameFunction fullClassNameFunction = new FullClassNameFunction();
 
 
     private final TreeMethodItemHolder treeMethodItemHolder;
@@ -102,9 +101,11 @@ public class MethodRequestController implements Initializable {
     private void executeRequest( TreeMethodItemHolder methodItemHolder, String serviceAddress, int servicePort ) {
         Method method = methodItemHolder.getMethod();
 
-        String serviceClassName = fullClassNameFunction.get( methodItemHolder.getNamespace(), methodItemHolder.getServiceName() );
+        String serviceClassName = ClassNameBuilder.create()
+                .withNamespace( methodItemHolder.getNamespace() )
+                .withServiceName( methodItemHolder.getServiceName() )
+                .build();
         String clientClass = serviceClassName + MainController.ThriftConstants.CLIENT;
-
 
         TProtocol protocol = null;
         try {
