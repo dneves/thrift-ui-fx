@@ -24,6 +24,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -130,7 +132,7 @@ public class MainController implements Initializable {
         treeMethodExplorer.setShowRoot( false );
 
 
-        MenuItem addContractMenuItem = new MenuItem( "Add Contract" );
+        MenuItem addContractMenuItem = new MenuItem( "Add Contract", new ImageView( new Image("/images/add-8x8.png") ) );
         addContractMenuItem.setOnAction(event -> {
             File fileContract = chooseContractFile( treeMethodExplorer.getScene().getWindow() );
             if ( fileContract == null ) {
@@ -153,14 +155,17 @@ public class MainController implements Initializable {
 //        menu bar items
         Menu file = new Menu( "File" );
 
-        file.getItems().add( addContractMenuItem );
+        MenuItem itemAddContract = new MenuItem( "Add Contract", new ImageView( new Image("/images/add-8x8.png") ) );
+        itemAddContract.setOnAction(event -> addContractMenuItem.fire());
+
+        file.getItems().add( itemAddContract );
         file.getItems().add( new SeparatorMenuItem() );
 
-        MenuItem close = new MenuItem( "Close" );
+        MenuItem close = new MenuItem( "Close", new ImageView( new Image("/images/dialog_cancel-12x12.png") ) );
         close.setOnAction(event -> Platform.exit());
         file.getItems().add( close );
 
-        MenuItem aboutItem = new MenuItem( "About" );
+        MenuItem aboutItem = new MenuItem( "About", new ImageView( new Image("/images/info-12x12.png") ) );
         aboutItem.setOnAction(event -> onAboutAction());
 
         Menu help = new Menu( "Help" );
@@ -204,6 +209,8 @@ public class MainController implements Initializable {
     }
 
     private void generateContractSources( String fileContractPath ) {
+//        TODO : add loading info
+
 //        find the service name throught thrift contract
         new ServiceNameFinder().apply(fileContractPath).ifPresent(serviceName -> {
             try {

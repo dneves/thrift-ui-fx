@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -57,6 +59,7 @@ public class MethodRequestController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        buttonExecute.setGraphic( new ImageView( new Image("/images/play-12x12.png") ));
         buttonExecute.setDisable( true );
         buttonExecute.setOnAction(event -> {
             String serviceAddress = txtServiceAddress.getText();
@@ -81,7 +84,20 @@ public class MethodRequestController implements Initializable {
         });
 
         txtRequest.setText( toJson( treeMethodItemHolder.getMethod() ) );
-        buttonExecute.setDisable( false );
+
+        txtServiceAddress.textProperty().addListener((observable, oldValue, newValue) -> {
+            buttonExecute.setDisable( ! validateForExecute( newValue, txtServicePort.getText() ) );
+        });
+        txtServicePort.textProperty().addListener((observable, oldValue, newValue) -> {
+            buttonExecute.setDisable( ! validateForExecute( txtServiceAddress.getText(), newValue ) );
+        });
+    }
+
+
+    private boolean validateForExecute( String address, String port ) {
+        boolean hasPort = port != null && ! port.trim().isEmpty();
+        boolean hasAddress = address != null && ! address.trim().isEmpty();
+        return hasAddress && hasPort;
     }
 
     public Pane getView() {
