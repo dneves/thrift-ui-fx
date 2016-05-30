@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+<MigPane xmlns:fx="http://javafx.com/fxml"
+         styleClass="" layout="insets 15" cols="[][]" rows="[]15[][]15[]" MigPane.cc="growx, growy">
+
+    <Label text="Thrift UI" style="-fx-font-weight: bold" MigPane.cc="" /> <Label fx:id="labelVersionNumber" alignment="CENTER_RIGHT" text="" MigPane.cc="growx, wrap" />
+
+    <Label text="Copyright (C) 2016 Diogo Neves" alignment="CENTER" MigPane.cc="span 2, growx, wrap" />
+
+    <Hyperlink text="https://github.com/dneves/thrift-ui-fx" fx:id="linkUrl" alignment="CENTER" MigPane.cc="span 2, growx, wrap" />
+
+    <Label text="Build Date:" MigPane.cc="" /> <Label fx:id="labelBuildDate" alignment="CENTER_RIGHT" text="" MigPane.cc="growx, wrap" />
+
+</MigPane>

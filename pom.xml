@@ -44,6 +44,15 @@
                     <!--<keyStorePassword>example-password</keyStorePassword>-->
                     <!--<allPermissions>true</allPermissions>-->
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

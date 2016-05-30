@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.VBox?>
 <?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:id="root">
 
-<MigPane xmlns:fx="http://javafx.com/fxml"
-         id="rootPane"
-         styleClass="main-panel boxed"
-         layout="insets 10" cols="[shrink 0][grow]" rows="10[grow]10" >
+    <MenuBar fx:id="menuBar">
 
-    <MigPane styleClass="boxed" layout="insets 10" cols="[]" rows="[][grow]" MigPane.cc="growy">
-        <Button fx:id="buttonAddContract" text="+" MigPane.cc="wrap" />
-        <TreeView fx:id="treeMethodExplorer" MigPane.cc="growy" />
+    </MenuBar>
+
+    <MigPane fx:id="container"
+             styleClass="main-panel boxed"
+             layout="insets 10" cols="[shrink 0][grow]" rows="10[grow]10" >
+
+        <MigPane styleClass="boxed" layout="insets 10" cols="[]" rows="[][grow]" MigPane.cc="growy">
+            <Button fx:id="buttonAddContract" text="+" MigPane.cc="wrap" />
+            <TreeView fx:id="treeMethodExplorer" MigPane.cc="growy" />
+        </MigPane>
+
+        <TabPane fx:id="tabPane" MigPane.cc="growx, growy">
+
+        </TabPane>
+
     </MigPane>
-
-    <TabPane fx:id="tabPane" MigPane.cc="growx, growy">
-
-    </TabPane>
-
-</MigPane>
+</VBox>

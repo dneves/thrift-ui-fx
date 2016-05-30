@@ -12,7 +12,7 @@ public class MainApp extends Application {
 
     @Override
     public void start( Stage stage ) throws Exception {
-        MainController mainController = new MainController();
+        MainController mainController = new MainController( this );
 
         Scene scene = new Scene( mainController.getView() );
         scene.getStylesheets().add( "/styles/styles.css" );

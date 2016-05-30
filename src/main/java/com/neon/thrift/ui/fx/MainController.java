@@ -4,14 +4,20 @@ import com.neon.thrift.ui.gen.ClassNameBuilder;
 import com.neon.thrift.ui.gen.NamespaceFinder;
 import com.neon.thrift.ui.gen.ServiceNameFinder;
 import com.neon.thrift.ui.gen.ThriftCodeGenerator;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
@@ -21,6 +27,7 @@ import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -31,6 +38,7 @@ import org.irenical.jindy.Config;
 import org.irenical.jindy.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tbee.javafx.scene.layout.MigPane;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,14 +62,27 @@ public class MainController implements Initializable {
         String CLIENT = "$Client";
     }
 
+    @FXML private VBox root;
+
+    @FXML private MenuBar menuBar;
+
+    @FXML private MigPane container;
+
     @FXML private Button buttonAddContract;
     @FXML private TreeView< TreeItemHolder > treeMethodExplorer;
 
     @FXML private TabPane tabPane;
 
+
     private final Pane view;
 
-    public MainController() throws IOException {
+    private Dialog< Void > dialogAbout = null;
+
+    private final Application application;
+
+    public MainController( Application application ) throws IOException {
+        this.application = application;
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setController( this );
         view = fxmlLoader.load(getClass().getResourceAsStream("/fxml/layout.fxml"));
@@ -73,6 +94,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        VBox.setVgrow( container, Priority.ALWAYS );
 
         treeMethodExplorer.setCellFactory(root -> new TextFieldTreeCell<>(new StringConverter< TreeItemHolder>() {
             @Override
@@ -108,22 +130,46 @@ public class MainController implements Initializable {
         treeMethodExplorer.setShowRoot( false );
 
 
-        MenuItem treeAddContractMenuItem = new MenuItem( "Add Contract" );
-        treeAddContractMenuItem.setOnAction(event -> {
+        MenuItem addContractMenuItem = new MenuItem( "Add Contract" );
+        addContractMenuItem.setOnAction(event -> {
             File fileContract = chooseContractFile( treeMethodExplorer.getScene().getWindow() );
-            generateContractSources( fileContract.getAbsolutePath() );
+            if ( fileContract == null ) {
+                return ;
+            }
 
+            generateContractSources(fileContract.getAbsolutePath());
         });
-        ContextMenu treeContextMenu = new ContextMenu( treeAddContractMenuItem );
+        ContextMenu treeContextMenu = new ContextMenu( addContractMenuItem );
         treeMethodExplorer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if ( event.getButton() == MouseButton.SECONDARY ) {
                 treeContextMenu.show( treeMethodExplorer, event.getScreenX(), event.getScreenY() );
             }
         });
 
-        buttonAddContract.setOnAction(event -> treeAddContractMenuItem.fire());
+        buttonAddContract.setOnAction(event -> addContractMenuItem.fire());
         buttonAddContract.setTooltip( new Tooltip( "Add Contract" ) );
 
+
+//        menu bar items
+        Menu file = new Menu( "File" );
+
+        file.getItems().add( addContractMenuItem );
+        file.getItems().add( new SeparatorMenuItem() );
+
+        MenuItem close = new MenuItem( "Close" );
+        close.setOnAction(event -> Platform.exit());
+        file.getItems().add( close );
+
+        MenuItem aboutItem = new MenuItem( "About" );
+        aboutItem.setOnAction(event -> onAboutAction());
+
+        Menu help = new Menu( "Help" );
+        help.getItems().add( aboutItem );
+
+        menuBar.getMenus().addAll( file, help );
+
+
+//        start page tab
 //        TODO : start page pane
         VBox vBox = new VBox( 10 );
         vBox.alignmentProperty().setValue( Pos.CENTER );
@@ -133,6 +179,21 @@ public class MainController implements Initializable {
         Tab tab = new Tab("Start Page", vBox);
         tab.setClosable( false );
         tabPane.getTabs().add(tab);
+    }
+
+
+    private void onAboutAction() {
+        if ( dialogAbout == null ) {
+            try {
+                dialogAbout = new AboutDialog( application.getHostServices() );
+            } catch (IOException e) {
+                LOGGER.error( e.getLocalizedMessage(), e );
+            }
+        }
+
+        if ( dialogAbout != null ) {
+            dialogAbout.showAndWait();
+        }
     }
 
     private File chooseContractFile( Window window ) {
