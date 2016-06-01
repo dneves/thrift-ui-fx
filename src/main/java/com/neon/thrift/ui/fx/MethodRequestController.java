@@ -104,7 +104,11 @@ public class MethodRequestController implements Initializable {
         return view;
     }
 
-    private String toJson(Method method ) {
+    private String toJson( Method method ) {
+        if ( method == null ) {
+            return null;
+        }
+
         try {
             return methodToJson.generate(method);
         } catch (InstantiationException | IllegalAccessException e) {
