@@ -53,7 +53,8 @@ public class MethodToJsonTest {
                 "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
                 "    \"value\": {\n" +
                 "      \"id\": null,\n" +
-                "      \"randomProperty\": null\n" +
+                "      \"randomProperty\": null,\n" +
+                "      \"enumValue\": null\n" +
                 "    }\n" +
                 "  }\n" +
                 "]";
@@ -76,7 +77,8 @@ public class MethodToJsonTest {
                 "    \"value\": [\n" +
                 "      {\n" +
                 "        \"id\": null,\n" +
-                "        \"randomProperty\": null\n" +
+                "        \"randomProperty\": null,\n" +
+                "        \"enumValue\": null\n" +
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
@@ -99,7 +101,8 @@ public class MethodToJsonTest {
                 "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
                 "    \"value\": {\n" +
                 "      \"id\": null,\n" +
-                "      \"randomProperty\": null\n" +
+                "      \"randomProperty\": null,\n" +
+                "      \"enumValue\": null\n" +
                 "    }\n" +
                 "  },\n" +
                 "  {\n" +
@@ -132,7 +135,8 @@ public class MethodToJsonTest {
                 "    \"value\": [\n" +
                 "      {\n" +
                 "        \"id\": null,\n" +
-                "        \"randomProperty\": null\n" +
+                "        \"randomProperty\": null,\n" +
+                "        \"enumValue\": null\n" +
                 "      }\n" +
                 "    ]\n" +
                 "  },\n" +
@@ -166,7 +170,8 @@ public class MethodToJsonTest {
                 "    \"value\": {\n" +
                 "      \"map-key\": {\n" +
                 "        \"id\": null,\n" +
-                "        \"randomProperty\": null\n" +
+                "        \"randomProperty\": null,\n" +
+                "        \"enumValue\": null\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
@@ -178,4 +183,22 @@ public class MethodToJsonTest {
         Assert.assertEquals(expected, pharze );
     }
 
+    @Test
+    public void testEnums() throws Exception {
+        Class< ExampleService > aClass = ExampleService.class;
+        Method method = aClass.getMethod( "enumMethod", ExampleEnum.class );
+
+        MethodToJson methodToJson = new MethodToJson();
+        String pharze = methodToJson.generate(method);
+
+        String expected = "[\n" +
+                "  {\n" +
+                "    \"name\": \"arg0\",\n" +
+                "    \"type\": \"com.neon.thrift.ui.ExampleEnum\",\n" +
+                "    \"value\": \"ENUM_VALUE_1 | ENUM_VALUE_2\"\n" +
+                "  }\n" +
+                "]";
+
+        Assert.assertEquals( expected, pharze );
+    }
 }

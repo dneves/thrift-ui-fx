@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -78,43 +79,51 @@ public class JsonToObjects {
     }
 
 
-    private Object create(ClassLoader classLoader, String type, Object value ) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchFieldException {
-
-        if ( value instanceof List ) {
-            List< Object > list = ( List< Object > ) value;
-            List< Object > result = new ArrayList<>( list.size() );
+    private Object create(ClassLoader classLoader, String type, Object value )
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchFieldException {
+        if (value instanceof List) {
+            List<Object> list = (List<Object>) value;
+            List<Object> result = new ArrayList<>(list.size());
             for (Object listElement : list) {
-                result.add( create( classLoader, type, listElement ) );
+                result.add(create(classLoader, type, listElement));
             }
             return result;
-        } else if ( value instanceof Map ) {
-            Map< String, Object > map = ( Map< String, Object > ) value;
-
+        } else if (value instanceof Map) {
             Class<?> aClass = classLoader.loadClass( type );
             Object instance = aClass.newInstance();
 
+            Map<String, Object> map = (Map<String, Object>) value;
             for (String fieldName : map.keySet()) {
                 Object fieldValue = map.get(fieldName);
 
-                Field field = aClass.getDeclaredField( fieldName );
-                field.setAccessible( true );
-                field.set( instance, fieldValue );
+                Field field = aClass.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(instance, fieldValue);
             }
 
             return instance;
         } else {
-            if ( "int".equals( type ) ) {
-                Number number = ( Number ) value;
+            if ("int".equals(type)) {
+                Number number = (Number) value;
                 return number.intValue();
-            } else if ( "float".equals( type ) ) {
-                Number number = ( Number ) value;
+            } else if ("float".equals(type)) {
+                Number number = (Number) value;
                 return number.floatValue();
-            } else if ( "long".equals( type ) ) {
-                Number number = ( Number ) value;
+            } else if ("long".equals(type)) {
+                Number number = (Number) value;
                 return number.longValue();
-            } else if ( "double".equals( type ) ) {
-                Number number = ( Number ) value;
+            } else if ("double".equals(type)) {
+                Number number = (Number) value;
                 return number.doubleValue();
+            } else {
+                try {
+                    Class<?> aClass = classLoader.loadClass(type);
+                    if (aClass.isEnum()) {
+                        return Enum.valueOf((Class<Enum>) aClass, value.toString());
+                    }
+                } catch ( ClassNotFoundException e ) {
+                    // failing silently
+                }
             }
             return value;
         }

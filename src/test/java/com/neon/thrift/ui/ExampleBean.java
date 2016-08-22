@@ -6,6 +6,8 @@ public class ExampleBean {
 
     private String randomProperty;
 
+    private ExampleEnum enumValue;
+
     public ExampleBean() {
 
     }
@@ -26,6 +28,14 @@ public class ExampleBean {
         this.randomProperty = randomProperty;
     }
 
+    public ExampleEnum getEnumValue() {
+        return enumValue;
+    }
+
+    public void setEnumValue(ExampleEnum enumValue) {
+        this.enumValue = enumValue;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -34,7 +44,9 @@ public class ExampleBean {
         ExampleBean that = (ExampleBean) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        return randomProperty != null ? randomProperty.equals(that.randomProperty) : that.randomProperty == null;
+        if (randomProperty != null ? !randomProperty.equals(that.randomProperty) : that.randomProperty != null)
+            return false;
+        return enumValue == that.enumValue;
 
     }
 
@@ -42,6 +54,7 @@ public class ExampleBean {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (randomProperty != null ? randomProperty.hashCode() : 0);
+        result = 31 * result + (enumValue != null ? enumValue.hashCode() : 0);
         return result;
     }
 }

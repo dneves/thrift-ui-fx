@@ -9,9 +9,12 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.StringTokenizer;
 
 /**
  * [
@@ -114,14 +117,37 @@ public class MethodToJson {
         }
 
         if ( clazz.isPrimitive() || clazz == String.class ) {
-//            its a primitive type - got default value
+            //            its a primitive type - got default value
 
-            if ( decorate ) {
+            if (decorate) {
                 json.append(", \"type\": ")
                         .append("\"").append(clazz.getCanonicalName()).append("\"");
                 json.append(", \"value\": ");
             }
-            json.append( Defaults.defaultValue( clazz ) );
+            json.append(Defaults.defaultValue(clazz));
+
+        } else if ( clazz.isEnum() ) {
+
+            if ( decorate ) {
+                json.append(", \"type\": ")
+                        .append("\"").append( clazz.getCanonicalName()).append("\"");
+                json.append(", \"value\": ");
+                json.append("\"");
+            }
+
+            final String SEPARATOR = " | ";
+            List<?> values = Arrays.asList(clazz.getEnumConstants());
+            int i = 0;
+            for (Object value : values) {
+                json.append( value );
+                if ( ++i < values.size() ) {
+                    json.append(SEPARATOR);
+                }
+            }
+
+            if ( decorate ) {
+                json.append("\"");
+            }
 
         } else {
 

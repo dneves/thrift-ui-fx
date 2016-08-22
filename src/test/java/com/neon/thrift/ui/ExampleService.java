@@ -19,4 +19,6 @@ public interface ExampleService {
 
     void mapMethod( Map< String, ExampleBean > map );
 
+    void enumMethod( ExampleEnum value );
+
 }

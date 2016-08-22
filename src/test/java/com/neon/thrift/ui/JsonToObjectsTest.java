@@ -90,4 +90,24 @@ public class JsonToObjectsTest {
         Assert.assertEquals( e, objects[ 0 ] );
     }
 
+    @Test
+    public void testEnums() throws Exception {
+        JsonToObjects jsonToObjects = new JsonToObjects();
+
+        ClassLoader classLoader = this.getClass().getClassLoader();
+
+        Object[] objects = jsonToObjects.create(classLoader, "[\n" +
+                "  {\n" +
+                "    \"name\": \"arg0\",\n" +
+                "    \"type\": \"com.neon.thrift.ui.ExampleEnum\",\n" +
+                "    \"value\": \"ENUM_VALUE_1\"\n" +
+                "  }\n" +
+                "]");
+
+        ExampleEnum expected = ExampleEnum.ENUM_VALUE_1;
+
+        Assert.assertTrue( objects != null && objects.length == 1 );
+        Assert.assertEquals( expected, objects[ 0 ] );
+    }
+
 }
