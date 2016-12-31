@@ -2,25 +2,23 @@ package com.neon.thrift.ui.gen;
 
 public class ClassNameBuilder {
 
+    private final String serviceName;
+
     private String namespace;
 
-    private String serviceName;
-
-    private ClassNameBuilder() {
-
+    private ClassNameBuilder( String serviceName ) {
+        if ( serviceName == null || serviceName.trim().isEmpty() ) {
+            throw new IllegalArgumentException( "serviceName cannot be null or empty" );
+        }
+        this.serviceName = serviceName;
     }
 
-    public static ClassNameBuilder create() {
-        return new ClassNameBuilder();
+    public static ClassNameBuilder create( String serviceName ) {
+        return new ClassNameBuilder( serviceName );
     }
 
     public ClassNameBuilder withNamespace(String namespace) {
         this.namespace = namespace;
-        return this;
-    }
-
-    public ClassNameBuilder withServiceName(String serviceName) {
-        this.serviceName = serviceName;
         return this;
     }
 

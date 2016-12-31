@@ -49,9 +49,11 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainController implements Initializable {
 
@@ -139,7 +141,12 @@ public class MainController implements Initializable {
                 return ;
             }
 
-            generateContractSources(fileContract.getAbsolutePath());
+            try {
+                generateContractSources(fileContract.getAbsolutePath());
+            } catch ( IOException e ) {
+                LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
+            }
         });
         ContextMenu treeContextMenu = new ContextMenu( addContractMenuItem );
         treeMethodExplorer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -193,6 +200,7 @@ public class MainController implements Initializable {
                 dialogAbout = new AboutDialog( application.getHostServices() );
             } catch (IOException e) {
                 LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
             }
         }
 
@@ -208,17 +216,17 @@ public class MainController implements Initializable {
         return fileChooser.showOpenDialog( window );
     }
 
-    private void generateContractSources( String fileContractPath ) {
+    private void generateContractSources( String fileContractPath ) throws IOException {
 //        TODO : add loading info
 
-//        find the service name throught thrift contract
-        new ServiceNameFinder().apply(fileContractPath).ifPresent(serviceName -> {
+        //        find the service name throught thrift contract
+        new ServiceNameFinder().apply( readContractFile( fileContractPath ) ).ifPresent(serviceName -> {
             try {
 //                generate thrift sources
                 Path pathContractSources = new ThriftCodeGenerator().generate(serviceName, fileContractPath);
 
 //                get sources namespace
-                String namespace = new NamespaceFinder().apply(fileContractPath).orElse(null);
+                String namespace = new NamespaceFinder().apply( readContractFile( fileContractPath ) ).orElse(null);
 
 //                compile generated sources
                 ClassLoader classLoader = compileContractSources( pathContractSources, namespace );
@@ -227,8 +235,13 @@ public class MainController implements Initializable {
                 onContractSourcesGenerated( namespace, serviceName, classLoader );
             } catch (IOException | InterruptedException e) {
                 LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
             }
         });
+    }
+
+    private Stream< String > readContractFile(String fileContractPath ) throws IOException {
+        return Files.lines( Paths.get( fileContractPath ) );
     }
 
     private ClassLoader compileContractSources( Path pathContractSources, String namespace ) throws IOException {
@@ -254,9 +267,8 @@ public class MainController implements Initializable {
                         }
                     } else {
                         try {
-                            String fullClassName = ClassNameBuilder.create()
+                            String fullClassName = ClassNameBuilder.create( path1.getFileName().toString().replace( ".java", "" ) )
                                     .withNamespace( namespace )
-                                    .withServiceName( path1.getFileName().toString().replace( ".java", "" ) )
                                     .build();
 
                             BufferedReader bufferedReader = Files.newBufferedReader(path1);
@@ -273,9 +285,8 @@ public class MainController implements Initializable {
 
     private void onContractSourcesGenerated( String namespace, String serviceName, ClassLoader classLoader ) {
 //        get service full classname (package.servicename)
-        String serviceClassName = ClassNameBuilder.create()
+        String serviceClassName = ClassNameBuilder.create( serviceName )
                 .withNamespace( namespace )
-                .withServiceName( serviceName )
                 .build();
 
         try {
@@ -298,6 +309,7 @@ public class MainController implements Initializable {
             treeMethodExplorer.getRoot().getChildren().add( itemService );
         } catch (ClassNotFoundException e) {
             LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
         }
     }
 
@@ -311,6 +323,7 @@ public class MainController implements Initializable {
             tabPane.getSelectionModel().select( tab );
         } catch (IOException e) {
             LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
         }
     }
 

@@ -122,9 +122,8 @@ public class MethodRequestController implements Initializable {
     private void executeRequest( TreeMethodItemHolder methodItemHolder, String serviceAddress, int servicePort ) {
         Method method = methodItemHolder.getMethod();
 
-        String serviceClassName = ClassNameBuilder.create()
+        String serviceClassName = ClassNameBuilder.create( methodItemHolder.getServiceName() )
                 .withNamespace( methodItemHolder.getNamespace() )
-                .withServiceName( methodItemHolder.getServiceName() )
                 .build();
         String clientClass = serviceClassName + MainController.ThriftConstants.CLIENT;
 

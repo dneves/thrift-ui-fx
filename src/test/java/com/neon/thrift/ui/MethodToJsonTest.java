@@ -1,5 +1,8 @@
 package com.neon.thrift.ui;
 
+import com.neon.thrift.ui.dummy.ExampleBean;
+import com.neon.thrift.ui.dummy.ExampleEnum;
+import com.neon.thrift.ui.dummy.ExampleService;
 import com.neon.thrift.ui.gen.MethodToJson;
 import org.junit.Assert;
 import org.junit.Test;
