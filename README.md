@@ -1,6 +1,8 @@
-# Thrift UI - JavaFX version
+# Thrift UI - JavaFX
 
 ## running
+
+- install [https://thrift.apache.org/](thrift)
 
 - clone project: 
 git clone git@github.com:dneves/thrift-ui-fx.git

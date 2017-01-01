@@ -4,6 +4,8 @@ import com.google.common.base.Defaults;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.Method;
@@ -13,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringJoiner;
-import java.util.StringTokenizer;
 
 /**
  * [
@@ -46,6 +46,8 @@ import java.util.StringTokenizer;
  */
 public class MethodToJson {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( MethodToJson.class );
+
     private final Gson gson = new GsonBuilder().serializeNulls().create();
 
     private final Gson gsonPretty = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
@@ -54,11 +56,11 @@ public class MethodToJson {
 
     }
 
-    public String generate(Method method ) throws InstantiationException, IllegalAccessException {
+    public String generate( Method method ) throws InstantiationException, IllegalAccessException {
         return generate( method, true );
     }
 
-    public String generate(Method method, boolean prettyPrint ) throws InstantiationException, IllegalAccessException {
+    public String generate( Method method, boolean prettyPrint ) throws InstantiationException, IllegalAccessException {
         StringBuilder json = new StringBuilder( "[ " );
 
         Parameter[] parameters = method.getParameters();
@@ -78,7 +80,13 @@ public class MethodToJson {
         if ( prettyPrint ) {
             Type type = new TypeToken<List<Map<String, Object>>>() {}.getType();
             List<Map<String, Object>> objects = gson.fromJson( json.toString(), type);
-            return gsonPretty.toJson( objects, type );
+            String toJson = gsonPretty.toJson(objects, type);
+
+//            giveup to convert int values of 0.0 to 0
+            toJson = toJson.replaceAll(
+                    "\"type\": \"int\",\n(\\s*)\"value\": (\\d)(\\.\\d*)?",
+                    "\"type\": \"int\",\n$1\"value\": $2" );
+            return toJson;
         }
 
         return json.toString();

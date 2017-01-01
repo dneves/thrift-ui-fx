@@ -35,7 +35,7 @@ public class MethodToJsonTest {
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
                 "    \"type\": \"int\",\n" +
-                "    \"value\": 0.0\n" +
+                "    \"value\": 0\n" +
                 "  }\n" +
                 "]";
 
@@ -53,7 +53,7 @@ public class MethodToJsonTest {
         final String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "    \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "    \"value\": {\n" +
                 "      \"id\": null,\n" +
                 "      \"randomProperty\": null,\n" +
@@ -76,7 +76,7 @@ public class MethodToJsonTest {
         final String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "    \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "    \"value\": [\n" +
                 "      {\n" +
                 "        \"id\": null,\n" +
@@ -101,7 +101,7 @@ public class MethodToJsonTest {
         final String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "    \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "    \"value\": {\n" +
                 "      \"id\": null,\n" +
                 "      \"randomProperty\": null,\n" +
@@ -111,7 +111,7 @@ public class MethodToJsonTest {
                 "  {\n" +
                 "    \"name\": \"arg1\",\n" +
                 "    \"type\": \"int\",\n" +
-                "    \"value\": 0.0\n" +
+                "    \"value\": 0\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"name\": \"arg2\",\n" +
@@ -134,7 +134,7 @@ public class MethodToJsonTest {
         final String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "    \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "    \"value\": [\n" +
                 "      {\n" +
                 "        \"id\": null,\n" +
@@ -151,7 +151,7 @@ public class MethodToJsonTest {
                 "  {\n" +
                 "    \"name\": \"arg2\",\n" +
                 "    \"type\": \"int\",\n" +
-                "    \"value\": 0.0\n" +
+                "    \"value\": 0\n" +
                 "  }\n" +
                 "]";
 
@@ -169,7 +169,7 @@ public class MethodToJsonTest {
         final String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "    \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "    \"value\": {\n" +
                 "      \"map-key\": {\n" +
                 "        \"id\": null,\n" +
@@ -197,7 +197,7 @@ public class MethodToJsonTest {
         String expected = "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleEnum\",\n" +
+                "    \"type\": \"" + ExampleEnum.class.getName() + "\",\n" +
                 "    \"value\": \"ENUM_VALUE_1 | ENUM_VALUE_2\"\n" +
                 "  }\n" +
                 "]";

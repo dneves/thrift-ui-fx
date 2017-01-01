@@ -1,6 +1,7 @@
 package com.neon.thrift.ui.fx;
 
 import com.neon.thrift.ui.gen.ClassNameBuilder;
+import com.neon.thrift.ui.gen.JavaCompiler;
 import com.neon.thrift.ui.gen.NamespaceFinder;
 import com.neon.thrift.ui.gen.ServiceNameFinder;
 import com.neon.thrift.ui.gen.ThriftCodeGenerator;
@@ -34,15 +35,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
-import org.abstractmeta.toolbox.compilation.compiler.JavaSourceCompiler;
-import org.abstractmeta.toolbox.compilation.compiler.impl.JavaSourceCompilerImpl;
 import org.irenical.jindy.Config;
 import org.irenical.jindy.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tbee.javafx.scene.layout.MigPane;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -52,7 +50,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MainController implements Initializable {
@@ -186,9 +183,8 @@ public class MainController implements Initializable {
         VBox vBox = new VBox( 10 );
         vBox.alignmentProperty().setValue( Pos.CENTER );
         vBox.getChildren().add( new Label( "version: " + CONFIG.getString( "version" ) ) );
-        vBox.getChildren().add( new Label( "this time is ok" ) );
 
-        Tab tab = new Tab("Start Page", vBox);
+        Tab tab = new Tab("Start", vBox);
         tab.setClosable( false );
         tabPane.getTabs().add(tab);
     }
@@ -229,10 +225,10 @@ public class MainController implements Initializable {
                 String namespace = new NamespaceFinder().apply( readContractFile( fileContractPath ) ).orElse(null);
 
 //                compile generated sources
-                ClassLoader classLoader = compileContractSources( pathContractSources, namespace );
+                ClassLoader classLoader = new JavaCompiler().compile( pathContractSources, namespace );
 
 //                do stuff with the generated sources
-                onContractSourcesGenerated( namespace, serviceName, classLoader );
+                onSourcesCompiled( namespace, serviceName, classLoader );
             } catch (IOException | InterruptedException e) {
                 LOGGER.error( e.getLocalizedMessage(), e );
 //                TODO : display error message
@@ -244,46 +240,7 @@ public class MainController implements Initializable {
         return Files.lines( Paths.get( fileContractPath ) );
     }
 
-    private ClassLoader compileContractSources( Path pathContractSources, String namespace ) throws IOException {
-        JavaSourceCompilerImpl javaSourceCompiler = new JavaSourceCompilerImpl();
-
-        JavaSourceCompiler.CompilationUnit compilationUnit = javaSourceCompiler.createCompilationUnit( pathContractSources.toFile() );
-
-        traverse( pathContractSources, namespace, compilationUnit );
-
-//        compile with -parameters to get their names
-        return javaSourceCompiler.compile( compilationUnit, "-parameters", "-parameters" );
-    }
-
-
-    private void traverse( Path path, String namespace, JavaSourceCompiler.CompilationUnit compilationUnit ) throws IOException {
-        Files.list( path )
-                .forEach(path1 -> {
-                    if ( path1.toFile().isDirectory() ) {
-                        try {
-                            traverse(path1, namespace, compilationUnit );
-                        } catch (IOException e) {
-                            LOGGER.error( e.getLocalizedMessage(), e );
-                        }
-                    } else {
-                        try {
-                            String fullClassName = ClassNameBuilder.create( path1.getFileName().toString().replace( ".java", "" ) )
-                                    .withNamespace( namespace )
-                                    .build();
-
-                            BufferedReader bufferedReader = Files.newBufferedReader(path1);
-                            String source = bufferedReader.lines().collect( Collectors.joining( "\n" ) );
-
-                            compilationUnit.addJavaSource( fullClassName, source );
-                        } catch (IOException e) {
-                            LOGGER.error( e.getLocalizedMessage(), e );
-                        }
-                    }
-                });
-    }
-
-
-    private void onContractSourcesGenerated( String namespace, String serviceName, ClassLoader classLoader ) {
+    private void onSourcesCompiled(String namespace, String serviceName, ClassLoader classLoader ) {
 //        get service full classname (package.servicename)
         String serviceClassName = ClassNameBuilder.create( serviceName )
                 .withNamespace( namespace )

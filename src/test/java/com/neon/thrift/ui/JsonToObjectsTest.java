@@ -53,7 +53,7 @@ public class JsonToObjectsTest {
         Object[] objects = jsonToObjects.create(classLoader, "[\n" +
                 "         {\n" +
                 "             \"name\": \"bean\",\n" +
-                "             \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "             \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "             \"value\": { \"id\": null, \"randomProperty\": null }\n" +
                 "         }\n" +
                 "    ]");
@@ -77,7 +77,7 @@ public class JsonToObjectsTest {
         Object[] objects = jsonToObjects.create(classLoader, "[\n" +
                 "         {\n" +
                 "             \"name\": \"beanList\",\n" +
-                "             \"type\": \"com.neon.thrift.ui.ExampleBean\",\n" +
+                "             \"type\": \"" + ExampleBean.class.getName() + "\",\n" +
                 "             \"value\": [ { \"id\": null, \"randomProperty\": null }, { \"id\": null, \"randomProperty\": null } ]\n" +
                 "         }\n" +
                 "    ]");
@@ -101,7 +101,7 @@ public class JsonToObjectsTest {
         Object[] objects = jsonToObjects.create(classLoader, "[\n" +
                 "  {\n" +
                 "    \"name\": \"arg0\",\n" +
-                "    \"type\": \"com.neon.thrift.ui.ExampleEnum\",\n" +
+                "    \"type\": \"" + ExampleEnum.class.getName() + "\",\n" +
                 "    \"value\": \"ENUM_VALUE_1\"\n" +
                 "  }\n" +
                 "]");
