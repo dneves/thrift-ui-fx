@@ -2,7 +2,7 @@
 
 ## running
 
-- install [https://thrift.apache.org/](thrift)
+- install [https://thrift.apache.org/](https://thrift.apache.org/)
 
 - clone project: 
 git clone git@github.com:dneves/thrift-ui-fx.git
