@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dneves/thrift-ui-fx.svg?branch=master)](https://travis-ci.org/dneves/thrift-ui-fx)
+
 [![codecov](https://codecov.io/gh/dneves/thrift-ui-fx/branch/master/graph/badge.svg)](https://codecov.io/gh/dneves/thrift-ui-fx)
 
 # Thrift UI - JavaFX
