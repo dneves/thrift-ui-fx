@@ -4,7 +4,8 @@ import com.neon.thrift.ui.gen.ClassNameBuilder;
 import com.neon.thrift.ui.gen.JavaCompiler;
 import com.neon.thrift.ui.gen.NamespaceFinder;
 import com.neon.thrift.ui.gen.ServiceNameFinder;
-import com.neon.thrift.ui.gen.ThriftCodeGenerator;
+import com.neon.thrift.ui.gen.CodeGenerator;
+import com.neon.thrift.ui.gen.ThriftCommand;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -219,7 +220,7 @@ public class MainController implements Initializable {
         new ServiceNameFinder().apply( readContractFile( fileContractPath ) ).ifPresent(serviceName -> {
             try {
 //                generate thrift sources
-                Path pathContractSources = new ThriftCodeGenerator().generate(serviceName, fileContractPath);
+                Path pathContractSources = new CodeGenerator( new ThriftCommand() ).generate(serviceName, fileContractPath);
 
 //                get sources namespace
                 String namespace = new NamespaceFinder().apply( readContractFile( fileContractPath ) ).orElse(null);

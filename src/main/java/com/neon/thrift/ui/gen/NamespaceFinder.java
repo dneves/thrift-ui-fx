@@ -15,7 +15,7 @@ public class NamespaceFinder implements Function< Stream< String >, Optional< St
                 .map(line -> {
                     String packagePath = line.substring( FILTER.length() );
                     if ( packagePath.endsWith( ";" ) ) {
-                        packagePath = packagePath.substring( 0, -1 );
+                        packagePath = packagePath.substring( 0, packagePath.length() - 1 );
                     }
                     return packagePath;
                 })

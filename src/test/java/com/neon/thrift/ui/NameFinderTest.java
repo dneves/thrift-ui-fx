@@ -21,10 +21,15 @@ public class NameFinderTest {
 
     @Test
     public void testNamespaceFinder() throws Exception {
-        NamespaceFinder namespaceFinder = new NamespaceFinder();
+        Optional<String> optional = new NamespaceFinder().apply( Stream.of("something", "", "namespace java com.example", "" ) );
 
-        Optional<String> optional = namespaceFinder.apply( Stream.of("something", "", "namespace java com.example", "" ) );
+        Assert.assertTrue( optional.isPresent() );
+        Assert.assertEquals( "com.example", optional.get() );
+    }
 
+    @Test
+    public void testNamespaceFinderSemiColon() throws Exception {
+        Optional<String> optional = new NamespaceFinder().apply(Stream.of("something", "", "namespace java com.example;", "", "service MyService {", "", "}"));
         Assert.assertTrue( optional.isPresent() );
         Assert.assertEquals( "com.example", optional.get() );
     }
