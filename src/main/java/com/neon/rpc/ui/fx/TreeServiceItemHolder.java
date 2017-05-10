@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.fx;
+package com.neon.rpc.ui.fx;
 
 public class TreeServiceItemHolder extends TreeItemHolder {
 

@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.gen;
+package com.neon.rpc.gen;
 
 import com.google.common.base.Defaults;
 import com.google.gson.Gson;

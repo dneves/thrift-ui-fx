@@ -1,11 +1,11 @@
-package com.neon.thrift.ui.fx;
+package com.neon.rpc.ui.fx;
 
-import com.neon.thrift.ui.gen.ClassNameBuilder;
-import com.neon.thrift.ui.gen.JavaCompiler;
-import com.neon.thrift.ui.gen.NamespaceFinder;
-import com.neon.thrift.ui.gen.ServiceNameFinder;
-import com.neon.thrift.ui.gen.CodeGenerator;
-import com.neon.thrift.ui.gen.ThriftCommand;
+import com.neon.rpc.gen.ClassNameBuilder;
+import com.neon.rpc.gen.JavaCompiler;
+import com.neon.rpc.thrift.ThriftNamespaceFinder;
+import com.neon.rpc.thrift.ThriftServiceNameFinder;
+import com.neon.rpc.gen.CodeGenerator;
+import com.neon.rpc.thrift.ThriftCommand;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -217,13 +217,13 @@ public class MainController implements Initializable {
 //        TODO : add loading info
 
         //        find the service name throught thrift contract
-        new ServiceNameFinder().apply( readContractFile( fileContractPath ) ).ifPresent(serviceName -> {
+        new ThriftServiceNameFinder().apply( readContractFile( fileContractPath ) ).ifPresent(serviceName -> {
             try {
 //                generate thrift sources
                 Path pathContractSources = new CodeGenerator( new ThriftCommand() ).generate(serviceName, fileContractPath);
 
 //                get sources namespace
-                String namespace = new NamespaceFinder().apply( readContractFile( fileContractPath ) ).orElse(null);
+                String namespace = new ThriftNamespaceFinder().apply( readContractFile( fileContractPath ) ).orElse(null);
 
 //                compile generated sources
                 ClassLoader classLoader = new JavaCompiler().compile( pathContractSources, namespace );

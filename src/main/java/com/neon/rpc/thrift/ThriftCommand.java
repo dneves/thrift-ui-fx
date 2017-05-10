@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.gen;
+package com.neon.rpc.thrift;
 
 import java.util.LinkedList;
 import java.util.List;

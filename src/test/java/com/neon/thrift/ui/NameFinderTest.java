@@ -1,7 +1,7 @@
 package com.neon.thrift.ui;
 
-import com.neon.thrift.ui.gen.NamespaceFinder;
-import com.neon.thrift.ui.gen.ServiceNameFinder;
+import com.neon.rpc.thrift.ThriftNamespaceFinder;
+import com.neon.rpc.thrift.ThriftServiceNameFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class NameFinderTest {
 
     @Test
     public void testServiceNameFinder() throws Exception {
-        ServiceNameFinder serviceNameFinder = new ServiceNameFinder();
+        ThriftServiceNameFinder serviceNameFinder = new ThriftServiceNameFinder();
 
         Optional<String> serviceName = serviceNameFinder.apply( Stream.of( "something", "", "service MyService {", "", "}", "" ) );
         Assert.assertTrue( serviceName.isPresent() );
@@ -21,7 +21,7 @@ public class NameFinderTest {
 
     @Test
     public void testNamespaceFinder() throws Exception {
-        Optional<String> optional = new NamespaceFinder().apply( Stream.of("something", "", "namespace java com.example", "" ) );
+        Optional<String> optional = new ThriftNamespaceFinder().apply( Stream.of("something", "", "namespace java com.example", "" ) );
 
         Assert.assertTrue( optional.isPresent() );
         Assert.assertEquals( "com.example", optional.get() );
@@ -29,20 +29,20 @@ public class NameFinderTest {
 
     @Test
     public void testNamespaceFinderSemiColon() throws Exception {
-        Optional<String> optional = new NamespaceFinder().apply(Stream.of("something", "", "namespace java com.example;", "", "service MyService {", "", "}"));
+        Optional<String> optional = new ThriftNamespaceFinder().apply(Stream.of("something", "", "namespace java com.example;", "", "service MyService {", "", "}"));
         Assert.assertTrue( optional.isPresent() );
         Assert.assertEquals( "com.example", optional.get() );
     }
 
     @Test
     public void testNamespaceFinderNoNamespace() throws Exception {
-        Optional<String> optional = new NamespaceFinder().apply(Stream.of("something", "", "service MyService {", "", "}"));
+        Optional<String> optional = new ThriftNamespaceFinder().apply(Stream.of("something", "", "service MyService {", "", "}"));
         Assert.assertFalse( optional.isPresent() );
     }
 
     @Test
     public void testNamespaceFinderNoJavaNamespace() throws Exception {
-        Optional<String> optional = new NamespaceFinder().apply(Stream.of("something", "", "namespace cpp com.example", "", "service MyService {", "", "}"));
+        Optional<String> optional = new ThriftNamespaceFinder().apply(Stream.of("something", "", "namespace cpp com.example", "", "service MyService {", "", "}"));
         Assert.assertFalse( optional.isPresent() );
     }
 

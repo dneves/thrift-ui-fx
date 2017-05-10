@@ -1,7 +1,7 @@
 package com.neon.thrift.ui;
 
-import com.neon.thrift.ui.fx.MethodRequestController;
-import com.neon.thrift.ui.fx.TreeMethodItemHolder;
+import com.neon.rpc.ui.fx.MethodRequestController;
+import com.neon.rpc.ui.fx.TreeMethodItemHolder;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

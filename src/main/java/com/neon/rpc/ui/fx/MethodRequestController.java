@@ -1,8 +1,8 @@
-package com.neon.thrift.ui.fx;
+package com.neon.rpc.ui.fx;
 
-import com.neon.thrift.ui.gen.ClassNameBuilder;
-import com.neon.thrift.ui.gen.JsonToObjects;
-import com.neon.thrift.ui.gen.MethodToJson;
+import com.neon.rpc.gen.ClassNameBuilder;
+import com.neon.rpc.gen.JsonToObjects;
+import com.neon.rpc.gen.MethodToJson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

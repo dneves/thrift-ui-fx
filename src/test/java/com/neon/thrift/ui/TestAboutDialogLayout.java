@@ -1,6 +1,6 @@
 package com.neon.thrift.ui;
 
-import com.neon.thrift.ui.fx.AboutDialog;
+import com.neon.rpc.ui.fx.AboutDialog;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.irenical.jindy.ConfigFactory;

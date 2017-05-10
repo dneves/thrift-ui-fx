@@ -1,10 +1,10 @@
-package com.neon.thrift.ui.gen;
+package com.neon.rpc.thrift;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class NamespaceFinder implements Function< Stream< String >, Optional< String > >  {
+public class ThriftNamespaceFinder implements Function< Stream< String >, Optional< String > >  {
 
     private static final String FILTER = "namespace java ";
 

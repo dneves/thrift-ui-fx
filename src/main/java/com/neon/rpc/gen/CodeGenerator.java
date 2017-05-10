@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.gen;
+package com.neon.rpc.gen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

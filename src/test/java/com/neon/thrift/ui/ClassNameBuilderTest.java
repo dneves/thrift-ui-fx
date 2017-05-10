@@ -1,6 +1,6 @@
 package com.neon.thrift.ui;
 
-import com.neon.thrift.ui.gen.ClassNameBuilder;
+import com.neon.rpc.gen.ClassNameBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 

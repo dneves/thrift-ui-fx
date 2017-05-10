@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.fx;
+package com.neon.rpc.ui.fx;
 
 import java.lang.reflect.Method;
 
