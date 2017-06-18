@@ -158,7 +158,7 @@ public class MethodRequestController implements Initializable {
                 Class<?> parameterTypes[] = new Class<?>[ arguments.length ];
                 int i = 0;
                 for (Object argument : arguments) {
-                    parameterTypes[ i++ ] = argument.getClass();
+                    parameterTypes[ i++ ] = argument.getClass(); // TODO : if nulls, nullpointer
                 }
                 Method method = service.getMethod( methodName, parameterTypes );
                 return method.invoke(client, arguments);
