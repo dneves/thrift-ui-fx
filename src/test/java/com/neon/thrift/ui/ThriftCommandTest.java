@@ -1,6 +1,6 @@
 package com.neon.thrift.ui;
 
-import com.neon.rpc.thrift.ThriftCommand;
+import com.neon.rpc.gen.thrift.ThriftCommand;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -17,7 +17,7 @@ public class MainApp extends Application {
         Scene scene = new Scene( mainController.getView() );
         scene.getStylesheets().add( "/styles/styles.css" );
 
-        stage.setTitle( "Thrift UI" );
+        stage.setTitle( "RPC UI" );
         stage.setScene(scene);
         stage.setMaximized( true );
         stage.setResizable( true );

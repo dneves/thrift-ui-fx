@@ -1,4 +1,4 @@
-package com.neon.rpc.grpc;
+package com.neon.rpc.gen.grpc;
 
 import java.util.List;
 import java.util.function.BiFunction;

@@ -1,4 +1,4 @@
-package com.neon.rpc.thrift;
+package com.neon.rpc.gen.thrift;
 
 import java.util.Optional;
 import java.util.function.Function;

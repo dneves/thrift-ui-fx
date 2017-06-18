@@ -2,10 +2,10 @@ package com.neon.rpc.ui.fx;
 
 import com.neon.rpc.gen.ClassNameBuilder;
 import com.neon.rpc.gen.JavaCompiler;
-import com.neon.rpc.thrift.ThriftNamespaceFinder;
-import com.neon.rpc.thrift.ThriftServiceNameFinder;
+import com.neon.rpc.gen.thrift.ThriftNamespaceFinder;
+import com.neon.rpc.gen.thrift.ThriftServiceNameFinder;
 import com.neon.rpc.gen.CodeGenerator;
-import com.neon.rpc.thrift.ThriftCommand;
+import com.neon.rpc.gen.thrift.ThriftCommand;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -139,12 +139,7 @@ public class MainController implements Initializable {
                 return ;
             }
 
-            try {
-                generateContractSources(fileContract.getAbsolutePath());
-            } catch ( IOException e ) {
-                LOGGER.error( e.getLocalizedMessage(), e );
-//                TODO : display error message
-            }
+            processFileContract( fileContract );
         });
         ContextMenu treeContextMenu = new ContextMenu( addContractMenuItem );
         treeMethodExplorer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -190,7 +185,6 @@ public class MainController implements Initializable {
         tabPane.getTabs().add(tab);
     }
 
-
     private void onAboutAction() {
         if ( dialogAbout == null ) {
             try {
@@ -211,6 +205,25 @@ public class MainController implements Initializable {
         fileChooser.setTitle( "Choose thrift contract" );
         fileChooser.setSelectedExtensionFilter( new FileChooser.ExtensionFilter( "thrift file", "thrift" ) );
         return fileChooser.showOpenDialog( window );
+    }
+
+    private void processFileContract( File file ) {
+        boolean isThrift = file.getName().endsWith(".thrift");
+        boolean isProto = ! isThrift && file.getName().endsWith(".proto");
+
+        if ( isThrift ) {
+            try {
+                generateContractSources(file.getAbsolutePath());
+            } catch (IOException e) {
+                LOGGER.error(e.getLocalizedMessage(), e);
+//                TODO : display error message
+            }
+        } else if ( isProto ) {
+//            TODO : handle proto files
+
+        } else {
+            LOGGER.warn( "unable to process file: " + file.getAbsolutePath() + " - unknown type" );
+        }
     }
 
     private void generateContractSources( String fileContractPath ) throws IOException {

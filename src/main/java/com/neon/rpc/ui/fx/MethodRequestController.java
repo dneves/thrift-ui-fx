@@ -13,20 +13,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.irenical.fetchy.Fetchy;
+import org.irenical.fetchy.Node;
+import org.irenical.fetchy.connector.Connector;
+import org.irenical.fetchy.connector.thrift.ThriftConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class MethodRequestController implements Initializable {
@@ -81,7 +78,7 @@ public class MethodRequestController implements Initializable {
                 return ;
             }
 
-            executeRequest( treeMethodItemHolder, serviceAddress, servicePort );
+            executeThrift( treeMethodItemHolder, serviceAddress, servicePort );
         });
 
         txtRequest.setText( toJson( treeMethodItemHolder.getMethod() ) );
@@ -119,7 +116,8 @@ public class MethodRequestController implements Initializable {
     }
 
 
-    private void executeRequest( TreeMethodItemHolder methodItemHolder, String serviceAddress, int servicePort ) {
+
+    private void executeThrift( TreeMethodItemHolder methodItemHolder, String serviceAddress, int servicePort ) {
         Method method = methodItemHolder.getMethod();
 
         String serviceClassName = ClassNameBuilder.create( methodItemHolder.getServiceName() )
@@ -127,52 +125,51 @@ public class MethodRequestController implements Initializable {
                 .build();
         String clientClass = serviceClassName + MainController.ThriftConstants.CLIENT;
 
-        TProtocol protocol = null;
         try {
             Class<?> clientType = methodItemHolder.getClassLoader().loadClass( clientClass );
 
-            TTransport tTransport = new TFramedTransport( new TSocket( serviceAddress, servicePort ) );
-            protocol = new TBinaryProtocol( tTransport );
-            Constructor<?> constructor = clientType.getConstructor(TProtocol.class);
-
-            Object instance = constructor.newInstance(protocol);
-            open( protocol );
-
             Object[] arguments = jsonToObjects.create( methodItemHolder.getClassLoader(), txtRequest.getText() );
-            Object output = method.invoke(instance, arguments);
 
-//            get a response format ( thrift implements a simple toString() )
-            txtResponse.setText( output == null ? "" : output.toString() );
+            execute( serviceAddress, servicePort, clientType, new ThriftConnector<>( clientType ), method.getName(), arguments );
 
-        } catch (ClassNotFoundException | NoSuchMethodException | TTransportException | IllegalAccessException
-                | InvocationTargetException | InstantiationException | NoSuchFieldException e) {
+        } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchFieldException e ) {
             LOGGER.error( e.getLocalizedMessage(), e );
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText( e.getLocalizedMessage() );
             alert.showAndWait();
+        }
+    }
 
+
+    private void execute( String address, int port, Class< ? > service, Connector connector, String methodName, Object ... arguments ) {
+        Fetchy fetchy = new Fetchy();
+        try {
+            fetchy.start();
+            fetchy.register("myService",
+                    serviceId -> {
+                        Node node = new Node( serviceId, address, port );
+                        return Collections.singletonList(node);
+                    },
+                    list -> list.get( 0 ), connector );
+
+            Object output = fetchy.call("myService", service, client -> {
+                Class<?> parameterTypes[] = new Class<?>[ arguments.length ];
+                int i = 0;
+                for (Object argument : arguments) {
+                    parameterTypes[ i++ ] = argument.getClass();
+                }
+                Method method = service.getMethod( methodName, parameterTypes );
+                return method.invoke(client, arguments);
+            });
+
+            txtResponse.setText( output == null ? "" : output.toString() );
+
+        } catch (Exception e) {
+            LOGGER.error( e.getLocalizedMessage(), e );
         } finally {
-            close( protocol );
-        }
-    }
-
-    private void open( TProtocol protocol ) throws TTransportException {
-        if ( protocol != null ) {
-            TTransport transport = protocol.getTransport();
-            if ( transport != null && ! transport.isOpen() ) {
-                transport.open();
-            }
-        }
-    }
-
-    private void close( TProtocol protocol ) {
-        if ( protocol != null ) {
-            TTransport transport = protocol.getTransport();
-            if ( transport != null && transport.isOpen() ) {
-                transport.close();
-            }
+            fetchy.stop();
         }
     }
 

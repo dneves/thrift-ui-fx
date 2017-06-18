@@ -110,6 +110,12 @@
             <version>1.5.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7</version>
+        </dependency>
+        
         <!-- runtime compile source code -->
         <dependency>
             <groupId>org.abstractmeta</groupId>
@@ -128,6 +134,28 @@
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.irenical.fetchy</groupId>
+            <artifactId>fetchy-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.irenical.fetchy</groupId>
+            <artifactId>fetchy-connector-thrift</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.irenical.fetchy</groupId>
+            <artifactId>fetchy-connector-grpc</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.irenical.fetchy</groupId>
+            <artifactId>fetchy-balancer-random</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
 
         <!-- to get default value for each type -->
         <!-- this will probably be removed in the future -->
