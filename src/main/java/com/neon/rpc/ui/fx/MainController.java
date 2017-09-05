@@ -237,20 +237,18 @@ public class MainController implements Initializable {
         boolean isThrift = file.getName().endsWith(".thrift");
         boolean isProto = ! isThrift && file.getName().endsWith(".proto");
 
-        if ( isThrift ) {
-            try {
-                handleThriftFile(file);
-            } catch (IOException e) {
-                LOGGER.error(e.getLocalizedMessage(), e);
-//                TODO : display error message
+        try {
+            if ( isThrift ) {
+                handleThriftFile( file );
+            } else if ( isProto ) {
+                handleGrpcFile( file );
+            } else {
+                LOGGER.warn( "unable to process file: " + file.getAbsolutePath() + " - unknown type" );
+    //            TODO : display warning message
             }
-        } else if ( isProto ) {
-//            TODO : handle proto files
-            handleGrpcFile( file );
-
-        } else {
-            LOGGER.warn( "unable to process file: " + file.getAbsolutePath() + " - unknown type" );
-//            TODO : display warning message
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+            //                TODO : display error message
         }
     }
 
@@ -259,8 +257,7 @@ public class MainController implements Initializable {
     }
 
 
-    private void handleGrpcFile( File fileContract ) {
-        try {
+    private void handleGrpcFile( File fileContract ) throws IOException, InterruptedException {
             Path pathContractSources = new CodeGenerator(new GrpcCommand()).generate(fileContract.getName(), fileContract);
 
             String namespace = new GrpcNamespaceFinder().apply(readContractFile(fileContract.getAbsolutePath())).orElse(null);
@@ -268,10 +265,6 @@ public class MainController implements Initializable {
             ClassLoader classLoader = new JavaCompiler().compile(pathContractSources, namespace);
 
             onGrpcSourcesCompiled( fileContract, classLoader, namespace );
-        } catch ( IOException | InterruptedException e ) {
-            LOGGER.error( e.getLocalizedMessage(), e );
-//            TODO : display error message
-        }
     }
 
     private void handleThriftFile( File fileContract ) throws IOException {
