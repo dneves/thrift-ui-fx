@@ -6,12 +6,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.neon.rpc.gen.grpc.model.Field;
+import com.neon.rpc.gen.grpc.model.Message;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
-public class FieldToJson implements Function<Field, String > {
+public class FieldToJson implements BiFunction< Map< String, Message>, Field, String > {
 
     private static final Map< String, Number > DEFAULT_NUMBERS = new HashMap<>();
     static {
@@ -28,14 +30,19 @@ public class FieldToJson implements Function<Field, String > {
         DEFAULT_NUMBERS.put( "sfixed32", 0 );
         DEFAULT_NUMBERS.put( "sfixed64", 0L );
     }
-    private final Gson gson = new GsonBuilder().serializeNulls().create();
 
-//    private final Gson gsonPretty = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder().serializeNulls().create();
 
 
     @Override
-    public String apply(Field field) {
+    public String apply( Map< String, Message > messages, Field field ) {
+        JsonElement element = build( messages, field );
 
+        return gson.toJson( element );
+    }
+
+
+    private JsonElement build( Map< String, Message > messages, Field field ) {
         JsonObject object = new JsonObject();
 
         object.addProperty( "name", field.getName() );
@@ -47,14 +54,16 @@ public class FieldToJson implements Function<Field, String > {
             Number number = DEFAULT_NUMBERS.get(field.getType());
             if (number != null) {
                 array.add( number );
+                object.add( "value", array );
             } else if ("bool".equalsIgnoreCase(field.getType())) {
                 array.add( Boolean.FALSE );
+                object.add( "value", array );
             } else if ("string".equalsIgnoreCase(field.getType())) {
                 array.add( "" );
+                object.add( "value", array );
             } else {
-                array.add( get( field ) );
+                object.add( "value", getMessageElement( messages, field ) );
             }
-            object.add( "value", array );
 
         } else {
 
@@ -66,18 +75,34 @@ public class FieldToJson implements Function<Field, String > {
             } else if ("string".equalsIgnoreCase(field.getType())) {
                 object.addProperty("value", "");
             } else {
-                object.add("value", get( field ) );
+                object.add("value", getMessageElement( messages, field ) );
             }
 
         }
 
-        return gson.toJson( object );
+        return object;
     }
 
-    private JsonElement get( Field field ) {
-//            TODO : add message bean properties
-//        TODO : use Message to know the fields
-        return new JsonObject();
+    private JsonElement getMessageElement(Map< String, Message > messages, Field field ) {
+        JsonArray messageObjectFields = new JsonArray();
+
+        Message message = messages.get(field.getType());
+        if ( message == null ) {
+            return messageObjectFields;
+        }
+
+        List<Field> fields = message.getFields();
+        if ( fields == null || fields.isEmpty() ) {
+            return messageObjectFields;
+        }
+
+        for (Field mField : fields) {
+            JsonElement mElement = build( messages, mField );
+
+            messageObjectFields.add( mElement );
+        }
+
+        return messageObjectFields;
     }
 
 //    private boolean isPrimitive( String type ) {
