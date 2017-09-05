@@ -1,6 +1,7 @@
 package com.neon.rpc.ui.fx.request;
 
 import com.google.gson.JsonElement;
+import com.neon.rpc.gen.JsonIntegerFix;
 import com.neon.rpc.gen.JsonPrettyPrinter;
 import com.neon.rpc.gen.JsonPrinter;
 import com.neon.rpc.gen.grpc.FieldToJson;
@@ -21,7 +22,7 @@ public class GrpcMethodToRequest implements MethodToRequest {
         JsonElement element = new ServiceMethodToJson(new MessageToJson(new FieldToJson()))
                 .apply(itemHolder.getMessages(), itemHolder.getMethod());
 
-        return new JsonPrettyPrinter().apply( new JsonPrinter().apply( element ) );
+        return new JsonIntegerFix().apply( new JsonPrettyPrinter().apply( new JsonPrinter().apply( element ) ) );
     }
 
 }
