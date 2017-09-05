@@ -223,6 +223,7 @@ public class MainController implements Initializable {
 
         } else {
             LOGGER.warn( "unable to process file: " + file.getAbsolutePath() + " - unknown type" );
+//            TODO : display warning message
         }
     }
 

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.neon.grpc";
+option java_outer_classname = "UService";
+option objc_class_prefix = "UService";
+
+package uservice;
+
+service UServiceService {
+    rpc create( EntityList ) returns ( EntityListResponse ) {};
+    rpc read( EntitySelector ) returns ( EntityListResponse ) {};
+    rpc update( EntityList ) returns (Empty) {};
+    rpc delete( EntitySelector ) returns (Empty) {};
+}
+
+message Empty {
+}
+
+message EntitySelector {
+    repeated string id = 1;
+    string cursor = 2;
+    uint32 limit = 3;
+}
+
+message EntityListResponse {
+    string errorMessage = 1;
+    repeated Entity entity = 2;
+    string cursor = 3;
+    bool hasNext = 4;
+}
+
+message EntityList {
+    repeated Entity entity = 1;
+}
+
+message Entity {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}

@@ -1,4 +1,4 @@
-package com.neon.thrift.ui.dummy;
+package com.neon.rpc.gen.thrift.dummy;
 
 public class ExampleBean {
 

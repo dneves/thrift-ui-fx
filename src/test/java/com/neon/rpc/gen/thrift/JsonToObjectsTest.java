@@ -1,7 +1,7 @@
-package com.neon.thrift.ui;
+package com.neon.rpc.gen.thrift;
 
-import com.neon.thrift.ui.dummy.ExampleBean;
-import com.neon.thrift.ui.dummy.ExampleEnum;
+import com.neon.rpc.gen.thrift.dummy.ExampleBean;
+import com.neon.rpc.gen.thrift.dummy.ExampleEnum;
 import com.neon.rpc.gen.JsonToObjects;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.neon.thrift.ui;
+package com.neon.rpc.ui.fx;
 
 import com.neon.rpc.ui.fx.MethodRequestController;
 import com.neon.rpc.ui.fx.TreeMethodItemHolder;
