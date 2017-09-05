@@ -1,12 +1,12 @@
-package com.neon.rpc.ui.fx;
+package com.neon.rpc.ui.fx.tree;
 
 import java.lang.reflect.Method;
 
-public class TreeMethodItemHolder extends TreeItemHolder {
+public class TreeThriftMethodItemHolder extends TreeItemHolder {
 
     private Method method;
 
-    public TreeMethodItemHolder(ClassLoader classLoader, String namespace, String serviceName, Method method) {
+    public TreeThriftMethodItemHolder(ClassLoader classLoader, String namespace, String serviceName, Method method) {
         super( classLoader, namespace, serviceName);
         this.method = method;
     }

@@ -1,7 +1,5 @@
 package com.neon.rpc.gen.thrift;
 
-import com.neon.rpc.gen.thrift.ThriftNamespaceFinder;
-import com.neon.rpc.gen.thrift.ThriftServiceNameFinder;
 import org.junit.Assert;
 import org.junit.Test;
 

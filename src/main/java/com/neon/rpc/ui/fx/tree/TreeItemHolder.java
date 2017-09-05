@@ -1,4 +1,4 @@
-package com.neon.rpc.ui.fx;
+package com.neon.rpc.ui.fx.tree;
 
 public abstract class TreeItemHolder {
 

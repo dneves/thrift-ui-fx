@@ -1,9 +1,9 @@
 package com.neon.rpc.gen.thrift;
 
-import com.neon.rpc.gen.thrift.ThriftCommand;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class ThriftCommandTest {
         final List< String > expected = Arrays.asList( "thrift", "-out", outputPath, "--gen", "java", contractPath );
 
         ThriftCommand thriftCommand = new ThriftCommand();
-        List<String> command = thriftCommand.apply( outputPath, contractPath );
+        List<String> command = thriftCommand.apply( outputPath, new File( contractPath ) );
 
         Assert.assertEquals( expected, command );
     }

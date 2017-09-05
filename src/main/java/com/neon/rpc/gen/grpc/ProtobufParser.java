@@ -21,6 +21,10 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * TODO : support enum
+ * TODO : support nested messages
+ */
 public class ProtobufParser {
 
     class Rpc {

@@ -1,7 +1,7 @@
 package com.neon.rpc.ui.fx;
 
-import com.neon.rpc.ui.fx.MethodRequestController;
-import com.neon.rpc.ui.fx.TreeMethodItemHolder;
+import com.neon.rpc.ui.fx.request.MethodToRequest;
+import com.neon.rpc.ui.fx.request.RequestExecutor;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -21,9 +21,19 @@ public class TestMethodLayout extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        TreeMethodItemHolder treeMethodItemHolder = new TreeMethodItemHolder( this.getClass().getClassLoader(), "com.neon.thrift", "UTest", null );
-
-        MethodRequestController methodRequestController = new MethodRequestController(treeMethodItemHolder);
+        MethodRequestController methodRequestController = new MethodRequestController(
+                new MethodToRequest() {
+                    @Override
+                    public String get() throws Exception {
+                        return null;
+                    }
+                }, new RequestExecutor() {
+            @Override
+            public String execute(String host, int port, String request) {
+                return null;
+            }
+        }
+        );
 
         Pane view = methodRequestController.getView();
 

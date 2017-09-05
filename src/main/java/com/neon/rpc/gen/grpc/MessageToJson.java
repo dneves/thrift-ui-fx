@@ -12,9 +12,9 @@ import java.util.function.BiFunction;
 
 public class MessageToJson implements BiFunction<Map< String, Message >, Message, JsonElement > {
 
-    private final BiFunction< Map< String, Message >, Field, String > fieldToJson;
+    private final FieldToJson fieldToJson;
 
-    public MessageToJson(BiFunction< Map< String, Message >, Field, String> fieldToJson) {
+    public MessageToJson( FieldToJson fieldToJson ) {
         this.fieldToJson = fieldToJson;
     }
 

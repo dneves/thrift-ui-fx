@@ -42,24 +42,24 @@ public class CodeGenerator {
 //    }
 
 
-    private final BiFunction< String, String, List< String > > command;
+    private final BiFunction< String, File, List< String > > command;
 
-    public CodeGenerator( BiFunction< String, String, List< String > > command ) {
+    public CodeGenerator( BiFunction< String, File, List< String > > command ) {
         if ( command == null ) {
             throw new IllegalArgumentException( "command cannot be null" );
         }
         this.command = command;
     }
 
-    public Path generate( String serviceName, String contract ) throws IOException, InterruptedException {
+    public Path generate( String serviceName, File input ) throws IOException, InterruptedException {
 //        create temporary directory to hold the generated classes
-        Path tempDirectory = Files.createTempDirectory("thrift-" + serviceName + "-");
+        Path tempDirectory = Files.createTempDirectory("rpc-ui-" + serviceName + "-");
         File tempFileDirectory = tempDirectory.toFile();
         tempFileDirectory.deleteOnExit();
 
         Path path = tempDirectory.toAbsolutePath();
 
-        List< String > commandParameters = command.apply( path.toString(), contract );
+        List< String > commandParameters = command.apply( path.toString(), input );
         LOGGER.debug( "command: " + commandParameters.toString() );
 
         ProcessBuilder processBuilder = new ProcessBuilder( commandParameters );
