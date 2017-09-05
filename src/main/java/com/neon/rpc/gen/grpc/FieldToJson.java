@@ -1,7 +1,5 @@
 package com.neon.rpc.gen.grpc;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class FieldToJson implements BiFunction< Map< String, Message>, Field, String > {
+public class FieldToJson implements BiFunction< Map< String, Message>, Field, JsonElement > {
 
     private static final Map< String, Number > DEFAULT_NUMBERS = new HashMap<>();
     static {
@@ -31,14 +29,10 @@ public class FieldToJson implements BiFunction< Map< String, Message>, Field, St
         DEFAULT_NUMBERS.put( "sfixed64", 0L );
     }
 
-    private final Gson gson = new GsonBuilder().serializeNulls().create();
-
 
     @Override
-    public String apply( Map< String, Message > messages, Field field ) {
-        JsonElement element = build( messages, field );
-
-        return gson.toJson( element );
+    public JsonElement apply( Map< String, Message > messages, Field field ) {
+        return build( messages, field );
     }
 
 

@@ -1,5 +1,6 @@
 package com.neon.rpc.gen.grpc;
 
+import com.neon.rpc.gen.JsonPrinter;
 import com.neon.rpc.gen.grpc.model.Field;
 import com.neon.rpc.gen.grpc.model.Message;
 import org.junit.Assert;
@@ -9,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FieldToJsonTest {
+
+    private static final JsonPrinter jsonPrinter = new JsonPrinter();
+
 
     @Test
     public void testStringSimpleField() throws Exception {
@@ -20,7 +24,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( false );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"string\",\"value\":\"\"}", json );
     }
 
@@ -34,7 +38,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( true );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"string\",\"value\":[\"\"]}", json );
     }
 
@@ -48,7 +52,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( false );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"bool\",\"value\":false}", json );
     }
 
@@ -62,7 +66,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( true );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"bool\",\"value\":[false]}", json );
     }
 
@@ -76,7 +80,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( false );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"int32\",\"value\":0}", json );
     }
 
@@ -90,7 +94,7 @@ public class FieldToJsonTest {
         field.setOrder( "1" );
         field.setRepeated( true );
 
-        String json = parser.apply( null, field);
+        String json = jsonPrinter.apply( parser.apply( null, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"float\",\"value\":[0.0]}", json );
     }
 
@@ -108,7 +112,7 @@ public class FieldToJsonTest {
 
         Field field = createField( "field-name", "Entity", "1", false );
 
-        String json = parser.apply( messages, field);
+        String json = jsonPrinter.apply( parser.apply( messages, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"Entity\",\"value\":[{\"name\":\"entity-field-1\",\"type\":\"string\",\"value\":\"\"},{\"name\":\"entity-field-2\",\"type\":\"string\",\"value\":[\"\"]}]}", json );
     }
 
@@ -125,7 +129,7 @@ public class FieldToJsonTest {
 
         Field field = createField( "field-name", "Entity", "1", true );
 
-        String json = parser.apply( messages, field);
+        String json = jsonPrinter.apply( parser.apply( messages, field) );
         Assert.assertEquals( "{\"name\":\"field-name\",\"type\":\"Entity\",\"value\":[{\"name\":\"entity-field-1\",\"type\":\"string\",\"value\":\"\"}]}", json );
     }
 
