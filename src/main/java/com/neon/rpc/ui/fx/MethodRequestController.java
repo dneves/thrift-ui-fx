@@ -54,11 +54,13 @@ public class MethodRequestController implements Initializable {
             String serviceAddress = txtServiceAddress.getText();
             if ( serviceAddress == null || serviceAddress.trim().isEmpty() ) {
                 LOGGER.error( "no service address" );
+//                TODO : display error message
                 return ;
             }
             String txtServicePort = this.txtServicePort.getText();
             if ( txtServicePort == null || txtServicePort.trim().isEmpty() ) {
                 LOGGER.error( "no service port" );
+//                TODO : display error message
                 return ;
             }
             int servicePort;
@@ -66,10 +68,16 @@ public class MethodRequestController implements Initializable {
                 servicePort = Integer.parseInt(txtServicePort);
             } catch ( NumberFormatException e ) {
                 LOGGER.error( "invalid service port" );
+//                TODO : display error message
                 return ;
             }
 
-            requestExecutor.execute( serviceAddress, servicePort, txtRequest.getText() );
+            try {
+                requestExecutor.execute( serviceAddress, servicePort, txtRequest.getText() );
+            } catch (Exception e) {
+                LOGGER.error( e.getLocalizedMessage(), e );
+//                TODO : display error message
+            }
         });
 
         try {

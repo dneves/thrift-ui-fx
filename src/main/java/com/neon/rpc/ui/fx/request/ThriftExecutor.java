@@ -27,8 +27,8 @@ public class ThriftExecutor implements RequestExecutor {
         this.methodItemHolder = methodItemHolder;
     }
 
-
-    public String execute( String serviceAddress, int servicePort, String request ) {
+    @Override
+    public String execute( String serviceAddress, int servicePort, String request ) throws Exception {
         Method method = methodItemHolder.getMethod();
 
         String serviceClassName = ClassNameBuilder.create( methodItemHolder.getServiceName() )
@@ -81,6 +81,7 @@ public class ThriftExecutor implements RequestExecutor {
 
         } catch (Exception e) {
             LOGGER.error( e.getLocalizedMessage(), e );
+//            TODO : display error message
         } finally {
             fetchy.stop();
         }
