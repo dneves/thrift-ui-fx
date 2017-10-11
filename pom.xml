@@ -8,7 +8,7 @@
     <name>thrift-ui-fx</name>
 
     <packaging>jar</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
