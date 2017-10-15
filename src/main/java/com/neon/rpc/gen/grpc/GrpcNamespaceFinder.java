@@ -1,5 +1,6 @@
 package com.neon.rpc.gen.grpc;
 
+import java.awt.geom.RectangularShape;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,9 +37,13 @@ public class GrpcNamespaceFinder implements Function< Stream< String >, Optional
         if ( p1 != null ) {
             result = p1;
         }
-        String p2 = packages.get( FILTER_PACKAGE );
-        if ( p2 != null ) {
-            result = result == null ? p2 : result + "." + p2;
+
+        if ( result == null ) {
+            String p2 = packages.get(FILTER_PACKAGE);
+            if (p2 != null) {
+                //            result = result == null ? p2 : result + "." + p2;
+                result = p2;
+            }
         }
 
         return Optional.ofNullable( result );

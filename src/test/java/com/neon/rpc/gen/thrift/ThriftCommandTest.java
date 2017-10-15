@@ -14,10 +14,10 @@ public class ThriftCommandTest {
         final String outputPath = "/output/folder";
         final String contractPath = "/some/folder/contract.thrift";
 
-        final List< String > expected = Arrays.asList( "thrift", "-out", outputPath, "--gen", "java", contractPath );
+        final List< List< String > > expected = Arrays.asList( Arrays.asList( "thrift", "-out", outputPath, "--gen", "java", contractPath ) );
 
         ThriftCommand thriftCommand = new ThriftCommand();
-        List<String> command = thriftCommand.apply( outputPath, new File( contractPath ) );
+        List< List<String> > command = thriftCommand.apply( outputPath, new File( contractPath ) );
 
         Assert.assertEquals( expected, command );
     }

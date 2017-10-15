@@ -52,6 +52,7 @@ import javafx.stage.Window;
 import javafx.util.StringConverter;
 import org.irenical.jindy.Config;
 import org.irenical.jindy.ConfigFactory;
+import org.irenical.jindy.ConfigNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tbee.javafx.scene.layout.MigPane;
@@ -246,9 +247,9 @@ public class MainController implements Initializable {
                 LOGGER.warn( "unable to process file: " + file.getAbsolutePath() + " - unknown type" );
     //            TODO : display warning message
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | ConfigNotFoundException e ) {
             LOGGER.error(e.getLocalizedMessage(), e);
-            //                TODO : display error message
+//            TODO : display error message
         }
     }
 
@@ -257,8 +258,8 @@ public class MainController implements Initializable {
     }
 
 
-    private void handleGrpcFile( File fileContract ) throws IOException, InterruptedException {
-            Path pathContractSources = new CodeGenerator(new GrpcCommand()).generate(fileContract.getName(), fileContract);
+    private void handleGrpcFile( File fileContract ) throws IOException, InterruptedException, ConfigNotFoundException {
+            Path pathContractSources = new CodeGenerator( new GrpcCommand() ).generate(fileContract.getName(), fileContract);
 
             String namespace = new GrpcNamespaceFinder().apply(readContractFile(fileContract.getAbsolutePath())).orElse(null);
 

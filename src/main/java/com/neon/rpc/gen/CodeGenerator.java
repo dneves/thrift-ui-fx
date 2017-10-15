@@ -42,9 +42,9 @@ public class CodeGenerator {
 //    }
 
 
-    private final BiFunction< String, File, List< String > > command;
+    private final BiFunction< String, File, List< List< String > > > command;
 
-    public CodeGenerator( BiFunction< String, File, List< String > > command ) {
+    public CodeGenerator( BiFunction< String, File, List< List< String > > > command ) {
         if ( command == null ) {
             throw new IllegalArgumentException( "command cannot be null" );
         }
@@ -59,19 +59,22 @@ public class CodeGenerator {
 
         Path path = tempDirectory.toAbsolutePath();
 
-        List< String > commandParameters = command.apply( path.toString(), input );
-        LOGGER.debug( "command: " + commandParameters.toString() );
 
-        ProcessBuilder processBuilder = new ProcessBuilder( commandParameters );
-        Process process = processBuilder.start();
+        List< List< String > > commands = command.apply( path.toString(), input );
+        for (List<String> commandParameters : commands) {
+            LOGGER.debug( "command: " + commandParameters.toString() );
+
+            ProcessBuilder processBuilder = new ProcessBuilder( commandParameters );
+            Process process = processBuilder.start();
+
+            process.waitFor();
+        }
 
 //        final Thread inputReader = new Thread( new ProcessReader( process.getInputStream() ) );
 //        inputReader.start();
 
 //        final Thread errorReader = new Thread( new ProcessReader( process.getErrorStream() ) );
 //        errorReader.start();
-
-        process.waitFor();
 
         return path;
     }

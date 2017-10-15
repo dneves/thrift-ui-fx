@@ -13,11 +13,27 @@ git clone git@github.com:dneves/thrift-ui-fx.git
 
 - run it:
 ```
-cd thrift-ui-fx
+cd rpc-ui-fx
 mvn clean package
-java -jar target/jfx/app/thrift-ui-fx-jfx.jar
+java -jar target/jfx/app/rpc-ui-fx-jfx.jar
 ```
 
+#### grpc
+
+For grpc, there needs to be an env variable set with the protoc-gen-grpc-java path
+
+[//]: <> (http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.grpc%22%20a%3A%22protoc-gen-grpc-java%22)
+
+[linux-x86_32.exe](http://search.maven.org/remotecontent?filepath=io/grpc/protoc-gen-grpc-java/1.7.0/protoc-gen-grpc-java-1.7.0-linux-x86_32.exe)
+[linux-x86_64.exe](http://search.maven.org/remotecontent?filepath=io/grpc/protoc-gen-grpc-java/1.7.0/protoc-gen-grpc-java-1.7.0-linux-x86_64.exe)
+[osx-x86_64.exe](http://search.maven.org/remotecontent?filepath=io/grpc/protoc-gen-grpc-java/1.7.0/protoc-gen-grpc-java-1.7.0-osx-x86_64.exe)
+[windows-x86_32.exe](http://search.maven.org/remotecontent?filepath=io/grpc/protoc-gen-grpc-java/1.7.0/protoc-gen-grpc-java-1.7.0-windows-x86_32.exe)
+[windows-x86_64.exe](http://search.maven.org/remotecontent?filepath=io/grpc/protoc-gen-grpc-java/1.7.0/protoc-gen-grpc-java-1.7.0-windows-x86_64.exe)
+
+- run it:
+```
+java -Dprotoc-gen-grpc-java.path=<PLUGIN_PATH>/protoc-gen-grpc-java-1.7.<PLUGIN_PLATFORM>.exe -jar target/jfx/app/rpc-ui-fx-jfx.jar
+```
 
 ## Author
 

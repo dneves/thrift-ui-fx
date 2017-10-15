@@ -32,13 +32,14 @@ public class GrpcExecutor implements RequestExecutor {
         Map<String, Message> messages = methodItemHolder.getMessages();
 
         String serviceClass = serviceName + "Grpc";
-        Class<?> C = classLoader.loadClass( serviceClass );
+        Class<?> C = classLoader.loadClass( namespace + "." + serviceClass );
         Method newBlockingStub = C.getMethod("newBlockingStub", Channel.class);
 
-        String ifaceClass = serviceClass + "." + serviceName + "BlockingStub";
-        Class< ? extends AbstractStub< ? > > I = (Class<? extends AbstractStub<?>>) classLoader.loadClass( ifaceClass );
+        String ifaceClass = serviceClass + "$" + serviceName + "BlockingStub";
+        Class< ? extends AbstractStub< ? > > I = (Class<? extends AbstractStub<?>>)
+                classLoader.loadClass( namespace + "." + ifaceClass );
 
-        Class<?> M = classLoader.loadClass(method.getMessage().getName());
+        Class<?> M = classLoader.loadClass( namespace + "." + method.getMessage().getName());
 
         Fetchy fetchy = new Fetchy();
         try {
