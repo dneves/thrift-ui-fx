@@ -73,7 +73,8 @@ public class MethodRequestController implements Initializable {
             }
 
             try {
-                requestExecutor.execute( serviceAddress, servicePort, txtRequest.getText() );
+                String output = requestExecutor.execute( serviceAddress, servicePort, txtRequest.getText() );
+                txtResponse.setText( output );
             } catch (Exception e) {
                 LOGGER.error( e.getLocalizedMessage(), e );
 //                TODO : display error message
