@@ -1,5 +1,6 @@
 package com.neon.rpc.ui.fx.request;
 
+import com.neon.rpc.gen.grpc.GrpcJsonToMessage;
 import com.neon.rpc.gen.grpc.model.Message;
 import com.neon.rpc.gen.grpc.model.ServiceMethod;
 import com.neon.rpc.ui.fx.tree.TreeGrpcMethodItemHolder;
@@ -8,6 +9,8 @@ import io.grpc.stub.AbstractStub;
 import org.irenical.fetchy.Fetchy;
 import org.irenical.fetchy.Node;
 import org.irenical.fetchy.connector.grpc.GrpcConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,6 +19,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class GrpcExecutor implements RequestExecutor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger( GrpcExecutor.class );
 
     private final TreeGrpcMethodItemHolder methodItemHolder;
 
@@ -41,6 +46,8 @@ public class GrpcExecutor implements RequestExecutor {
 
         Class<?> M = classLoader.loadClass( namespace + "." + method.getMessage().getName());
 
+        final GrpcJsonToMessage grpcJsonToMessage = new GrpcJsonToMessage(classLoader);
+
         Fetchy fetchy = new Fetchy();
         try {
             fetchy.start();
@@ -53,14 +60,13 @@ public class GrpcExecutor implements RequestExecutor {
                         try {
                             return (AbstractStub<?>) newBlockingStub.invoke( null, channel );
                         } catch (IllegalAccessException | InvocationTargetException e) {
-                            e.printStackTrace();
+                            LOGGER.error( e.getLocalizedMessage(), e );
                         }
                         return null;
                     }, true) );
 
             Object output = fetchy.call("myService", I, client -> {
-//                TODO : build message from 'request'
-                Object message = null;
+                Object message = grpcJsonToMessage.apply( request );
 
                 Method sMethod = I.getMethod(method.getName(), M);
                 return sMethod.invoke( client, message );
